@@ -1,0 +1,25 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+
+    <changeSet id="genres" author="mantas.grazys@devbridge.com">
+        <createTable tableName="genres">
+            <column name="id" type="UUID">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="name" type="VARCHAR(256)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addColumn tableName="movies">
+            <column name="genre_id" type="UUID"/>
+        </addColumn>
+        <dropColumn tableName="movies" columnName="genre" />
+        <addForeignKeyConstraint baseTableName="movies"
+                                 baseColumnNames="genre_id"
+                                 constraintName="fk_movie_genre"
+                                 referencedTableName="genres"
+                                 referencedColumnNames="id" />
+    </changeSet>
+</databaseChangeLog>

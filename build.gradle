@@ -1,0 +1,56 @@
+plugins {
+	id 'org.springframework.boot' version '2.3.5.RELEASE'
+	id 'io.spring.dependency-management' version '1.0.10.RELEASE'
+	id 'org.liquibase.gradle' version '2.0.4'
+	id 'java'
+}
+
+group = 'com.devbridge.sourcery'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '11'
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+liquibase {
+	activities {
+		main {
+			changeLogFile "src/main/resources/db/db-changelog.xml"
+			url "jdbc:postgresql://localhost:5432/lectures"
+			username "postgres"
+			password "admin"
+			driver "org.postgresql.Driver"
+		}
+	}
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
+	compile "org.postgresql:postgresql"
+	compileOnly 'org.projectlombok:lombok'
+	annotationProcessor 'org.projectlombok:lombok'
+	testImplementation('org.springframework.boot:spring-boot-starter-test') {
+		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+	}
+
+	liquibaseRuntime sourceSets.main.output
+	liquibaseRuntime 'org.liquibase:liquibase-core:3.8.1'
+	liquibaseRuntime 'org.liquibase:liquibase-groovy-dsl:2.1.1'
+	liquibaseRuntime "org.postgresql:postgresql"
+	liquibaseRuntime "ch.qos.logback:logback-classic:1.2.3"
+	liquibaseRuntime "org.json:json:20190722"
+	liquibaseRuntime group: 'javax.xml.bind', name: 'jaxb-api', version: '2.3.1'
+}
+
+test {
+	useJUnitPlatform()
+}
